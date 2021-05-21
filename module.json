@@ -1,0 +1,22 @@
+{
+		"name": "lootpopulatornpc5e",
+	"title": "LootPopulator NPC 5e",
+	"description": "A module to auto populate loot on NPCs",
+	"version": "0.0.1",
+	"minimumCoreVersion": "0.7.9",
+	"compatibleCoreVersion": "0.7.9",
+	"author": "Daniel Böttner",
+	"systems": ["dnd5e"],
+	"includes": [
+		"./hooks/**",
+		"./scripts/**"
+	],
+	"esmodules": [
+		"/lootpopulatornpc5e.js"
+	],
+	"styles": [],
+	"socket": false,
+	"url": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e",
+	"manifest": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/master/module.json",
+	"download": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/archive/master.zip"
+}
