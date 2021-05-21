@@ -6,6 +6,7 @@ This module allows you to enable automatic population of loot on NPCs in 5e.
 
 The module is heavily inspired by [LootSheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e) and also is only really useful when using this in tandem. As LootSheetNPC5e adds the capability and permission handling for players to actually loot items from token/actors.
 
+![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/image.png)
 ### Features
 
 Allows you to have automated random loot on NPCs when dropping them on the scene.
