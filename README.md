@@ -9,8 +9,6 @@ As LootSheetNPC5e adds the capability and permission handling for players to act
 
 Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
 
-Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
-
 ### Settings
 ![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/image.png)
 
