@@ -9,6 +9,8 @@ As LootSheetNPC5e adds the capability and permission handling for players to act
 
 Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
 
+Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
+
 ### Settings
 ![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/image.png)
 
@@ -21,6 +23,7 @@ The right sheet is directly from the actor.
 ### Features
 
 Allows you to have automated random loot on NPCs when dropping them on the scene.
+If installed, it will make use of better rolltables.
 
 ### Compatibility:
 - Tested with FVTT v0.7.9 and the DND5E system only.

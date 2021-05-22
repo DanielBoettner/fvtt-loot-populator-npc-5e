@@ -14,6 +14,17 @@ Hooks.once('ready', () => {
       type: Boolean
   });
 
+  if (typeof game.betterTables.generateLoot === "function") {
+    game.settings.register("lootpopulatornpc5e", "useBetterRolltables", {
+        name: "Use better rolltables",
+        hint: "If installed make use of better rolltables",
+        scope: "world",
+        config: true,
+        default: false,
+        type: Boolean
+    });
+  }
+
   let MyRolltables = Object.assign(...game.tables.entities.map(table => ({[table.name]: table.name})));
   game.settings.register("lootpopulatornpc5e", "fallbackRolltable", {
       name: "fallbackRolltable",
@@ -58,6 +69,15 @@ Hooks.once('ready', () => {
       scope: "world",
       config: true,
       default: true,
+      type: Boolean
+  });
+
+  game.settings.register("lootpopulatornpc5e", "adjustCurrencyWithCR", {
+      name: "Adjust added currency with CR",
+      hint: "If enabled added currency (via better rolltables) will be slightly adjusted by the CR (rollFormula + rounden up CR).",
+      scope: "world",
+      config: true,
+      default: false,
       type: Boolean
   });
 });

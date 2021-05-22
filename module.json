@@ -2,7 +2,7 @@
 		"name": "lootpopulatornpc5e",
 	"title": "LootPopulator NPC 5e",
 	"description": "A module to auto populate loot on NPCs",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"minimumCoreVersion": "0.7.9",
 	"compatibleCoreVersion": "0.7.9",
 	"author": "Daniel Böttner",
