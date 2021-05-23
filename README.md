@@ -10,7 +10,9 @@ As LootSheetNPC5e adds the capability and permission handling for players to act
 Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
 
 ### Settings
-![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/image.png)
+![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/LP_001.png)
+![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/LP_002.png)
+![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/LP_003.png)
 
 ### Example of filled inventory
 On the left is the sheet of a token that was droped on the scene.
