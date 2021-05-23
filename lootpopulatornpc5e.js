@@ -17,7 +17,7 @@ Hooks.once('ready', () => {
   if (typeof game.betterTables.generateLoot === "function") {
     game.settings.register("lootpopulatornpc5e", "useBetterRolltables", {
         name: "Use better rolltables",
-        hint: "If installed make use of better rolltables",
+        hint: "If installed make use of better rolltables?",
         scope: "world",
         config: true,
         default: false,
@@ -63,21 +63,39 @@ Hooks.once('ready', () => {
       type: String
   });
 
+  game.settings.register("lootpopulatornpc5e", "generateCurrency", {
+      name: "Add currency?",
+      hint: "Generate and add currency when populating a token?",
+      scope: "world",
+      config: true,
+      default: false,
+      type: Boolean
+  });
+
+  game.settings.register("lootpopulatornpc5e", "adjustCurrencyWithCR", {
+      name: "Adjust added currency with CR",
+      hint: "If enabled added currency will be slightly adjusted by the CR (rollFormula + rounden up CR).",
+      scope: "world",
+      config: true,
+      default: false,
+      type: Boolean
+  });
+
+  game.settings.register("lootpopulatornpc5e", "lootCurrencyDefault", {
+      name: "Default loot currency",
+      hint: "The default formula for loot currency generation.",
+      scope: "world",
+      config: true,
+      default: "1d4[gp], 1d20[sp], 1d50[cp]",
+      type: String
+  });
+
   game.settings.register("lootpopulatornpc5e", "reduceUpdateVerbosity", {
       name: "Reduce Update Shop Verbosity",
       hint: "If enabled, no notifications will be created every time an item is added.",
       scope: "world",
       config: true,
       default: true,
-      type: Boolean
-  });
-
-  game.settings.register("lootpopulatornpc5e", "adjustCurrencyWithCR", {
-      name: "Adjust added currency with CR",
-      hint: "If enabled added currency (via better rolltables) will be slightly adjusted by the CR (rollFormula + rounden up CR).",
-      scope: "world",
-      config: true,
-      default: false,
       type: Boolean
   });
 });
