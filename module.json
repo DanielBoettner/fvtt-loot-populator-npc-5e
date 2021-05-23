@@ -1,5 +1,5 @@
 {
-		"name": "lootpopulatornpc5e",
+	"name": "lootpopulatornpc5e",
 	"title": "LootPopulator NPC 5e",
 	"description": "A module to auto populate loot on NPCs",
 	"version": "0.0.4",
