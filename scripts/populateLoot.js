@@ -6,10 +6,9 @@ export class LootPopulator {
     return this;
   }
 
-	async generateLoot(scene, data) {
+	async generateLoot(token) {
         //instead of the main actor we want/need the actor of the token.
-				const tokenId = data._id;
-        const token = canvas.tokens.get(tokenId);
+				const tokenId = token.id;
         const actor = token.actor;
 
         const ls5e_moduleNamespace = "lootsheetnpc5e";
@@ -43,14 +42,16 @@ export class LootPopulator {
 
         if (!itemOnlyOnce) {
             for (let i = 0; i < shopQtyRoll.total; i++) {
-                const rollResult = rolltable.roll();
+                const rollResult = await rolltable.roll();
                 let newItem = null;
 
+
+
                 if (rollResult.results[0].collection === "Item") {
-                    newItem = game.items.get(rollResult.results[0].resultId);
+                    newItem = game.items.get(rollResult.results[0].data.resultId);
                 } else {
-                    const items = game.packs.get(rollResult.results[0].collection);
-                    newItem = await items.getEntity(rollResult.results[0].resultId);
+                    const items = game.packs.get(rollResult.results[0].data.collection);
+                    newItem = await items.getEntity(rollResult.results[0].data.resultId);
                 }
 
                 if (!newItem || newItem === null) {
@@ -68,8 +69,8 @@ export class LootPopulator {
 
                 let existingItem = actor.items.find(item => item.data.name == newItem.name);
 
-                if (existingItem === null) {
-                    await actor.createEmbeddedEntity("OwnedItem", newItem);
+                if (existingItem === undefined) {
+                    await actor.createEmbeddedDocuments("Item", [newItem.toObject()]);
                     console.log(this.moduleNamespace + `: ${newItem.name} does not exist.`);
                     existingItem = await actor.items.find(item => item.data.name == newItem.name);
 
@@ -163,8 +164,8 @@ export class LootPopulator {
                 }
                 else {
                     //Try to find it in the compendium
-                    const items = game.packs.get(rolltable.results[index].collection);
-                    newItem = await items.getEntity(rolltable.results[index].resultId);
+                    const items = game.packs.get(rolltable.results[index].data.collection);
+                    newItem = await items.getEntity(rollResult.results[0].data.resultId);
                 }
                 if (!newItem || newItem === null) {
                     return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
@@ -174,7 +175,7 @@ export class LootPopulator {
                     newItem = await Item5e.createScrollFromSpell(newItem)
                 }
 
-                await item.createEmbeddedEntity("OwnedItem", newItem);
+								await item.createEmbeddedDocuments("Item", [newItem.toObject()]);
                 let existingItem = actor.items.find(item => item.data.name == newItem.name);
 
                 if (itemQtyLimit > 0 && Number(itemQtyLimit) < Number(itemQtyRoll.total)) {
@@ -187,15 +188,15 @@ export class LootPopulator {
             }
         }
 
-				if (this._getSetting('useBetterRolltables')){
-					if (!reducedVerbosity) ui.notifications.info(this.moduleNamespace + `:	using BetterRolltables`);
+				if (this._getSetting('generateCurrency') &&  this._getSetting('lootCurrencyDefault')){
+					let lootCurrencyString = this._getSetting('lootCurrencyDefault');
 
-					let lootCurrencyString = rolltable.getFlag('better-rolltables','table-currency-string');
-					if(lootCurrencyString){
-						await this.addCurrenciesToActor(actor, this._generateCurrency(lootCurrencyString));
+					if (this._getSetting('useBetterRolltables')){
+						lootCurrencyString = rolltable.getFlag('better-rolltables','table-currency-string') || lootCurrencyString;
 					}
-				}
 
+					await this.addCurrenciesToActor(actor, this._generateCurrency(lootCurrencyString));
+				}
     }
 
 		async addCurrenciesToActor(actor, lootCurrency) {
