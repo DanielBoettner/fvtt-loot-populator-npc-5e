@@ -14,7 +14,7 @@ Hooks.once('ready', () => {
       type: Boolean
   });
 
-  if (typeof game.betterTables.generateLoot === "function") {
+  if (typeof game.betterTables !== "undefined") {
     game.settings.register("lootpopulatornpc5e", "useBetterRolltables", {
         name: "Use better rolltables",
         hint: "If installed make use of better rolltables?",
