@@ -33,8 +33,6 @@ export class LootPopulator {
             return ui.notifications.error(this.moduleNamespace + `: No Rollable Table found with name "${rolltableName}".`);
         }
 
-
-
         if (itemOnlyOnce) {
             if (rolltable.results.length < shopQtyRoll.total)  {
                 return ui.notifications.error(this.moduleNamespace + `: Cannot create a loot with ${shopQtyRoll.total} unqiue entries if the rolltable only contains ${rolltable.results.length} items`);
@@ -46,11 +44,22 @@ export class LootPopulator {
                 const rollResult = rolltable.roll();
                 let newItem = null;
 
-                if (rollResult.results[0].collection === "Item") {
-                    newItem = game.items.get(rollResult.results[0].resultId);
+								if (rollResult.results[0].collection === "Item") {
+                  newItem = game.items.get(rollResult.results[0].resultId);
                 } else {
-                    const items = game.packs.get(rollResult.results[0].collection);
-                    newItem = await items.getEntity(rollResult.results[0].resultId);
+                  let itemCollection = game.packs.get(rollResult.results[0].collection);
+                  newItem = await itemCollection.getEntity(rollResult.results[0].resultId);
+                }
+
+                if (newItem instanceof RollTable){
+                   let subTableResults  = newItem.roll();
+
+                   if(subTableResults.results[0].collection === "Item"){
+                        newItem = game.items.get(subTableResults.results[0].resultId);
+                   } else {
+                        let itemCollection = game.packs.get(subTableResults.results[0].collection);
+                        newItem = await itemCollection.getEntity(subTableResults.results[0].resultId);
+                   }
                 }
 
                 if (!newItem || newItem === null) {
@@ -156,19 +165,30 @@ export class LootPopulator {
                 let itemQtyRoll = new Roll(itemQtyFormula);
                 itemQtyRoll.roll();
 
-                let newItem = null
+								let newItem = null
 
-                if (rolltable.results[index].collection === "Item") {
-                    newItem = game.items.get(rolltable.results[index].resultId);
-                }
-                else {
-                    //Try to find it in the compendium
-                    const items = game.packs.get(rolltable.results[index].collection);
-                    newItem = await items.getEntity(rolltable.results[index].resultId);
-                }
-                if (!newItem || newItem === null) {
-                    return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
-                }
+								if (rolltable.results[index].collection === "Item") {
+									newItem = game.items.get(rolltable.results[index].resultId);
+								} else {
+								//Try to find it in the compendium
+									const items = game.packs.get(rolltable.results[index].collection);
+									newItem = await items.getEntity(rolltable.results[index].resultId);
+								}
+
+								if (newItem instanceof RollTable){
+									let subTableResults  = newItem.roll();
+
+									if(subTableResults.results[index].collection === "Item"){
+										newItem = game.items.get(subTableResults.results[index].resultId);
+									} else {
+									  let itemCollection = game.packs.get(subTableResults.results[index].collection);
+									  newItem = await itemCollection.getEntity(subTableResults.results[index].resultId);
+									}
+								}
+
+								if (!newItem || newItem === null) {
+									return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
+								}
 
                 if (newItem.type === "spell") {
                     newItem = await Item5e.createScrollFromSpell(newItem)
