@@ -54,6 +54,17 @@ export class LootPopulator {
                     newItem = await items.getEntity(rollResult.results[0].data.resultId);
                 }
 
+								if (newItem instanceof RollTable){
+									let subTableResults  = await newItem.roll();
+
+									if(subTableResults.results[0].data.collection === "Item"){
+										newItem = game.items.get(subTableResults.results[0].data.resultId);
+									} else {
+										let itemCollection = game.packs.get(subTableResults.results[0].data.collection);
+										newItem = await itemCollection.getEntity(subTableResults.results[0].data.resultId);
+									}
+                }
+
                 if (!newItem || newItem === null) {
                     return;
                 }
@@ -161,12 +172,23 @@ export class LootPopulator {
 
                 if (rolltable.results[index].collection === "Item") {
                     newItem = game.items.get(rolltable.results[index].resultId);
-                }
-                else {
+                } else {
                     //Try to find it in the compendium
                     const items = game.packs.get(rolltable.results[index].data.collection);
                     newItem = await items.getEntity(rollResult.results[0].data.resultId);
                 }
+
+								if (newItem instanceof RollTable){
+									let subTableResults  = await newItem.roll();
+
+									if(subTableResults.results[index].collection === "Item"){
+										newItem = game.items.get(subTableResults.results[index].data.resultId);
+									} else {
+										let itemCollection = game.packs.get(subTableResults.results[index].data.collection);
+										newItem = await itemCollection.getEntity(subTableResults.results[index].data.resultId);
+									}
+								}
+
                 if (!newItem || newItem === null) {
                     return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
                 }
