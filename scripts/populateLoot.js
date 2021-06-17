@@ -51,8 +51,10 @@ export class LootPopulator {
                     newItem = game.items.get(rollResult.results[0].data.resultId);
                 } else {
                     const items = game.packs.get(rollResult.results[0].data.collection);
-                    newItem = await items.getEntity(rollResult.results[0].data.resultId);
+                    newItem = await items.getDocument(rollResult.results[0].data.resultId);
                 }
+
+								newItem = this.rollSubTables(newItem);
 
                 if (!newItem || newItem === null) {
                     return;
@@ -161,12 +163,14 @@ export class LootPopulator {
 
                 if (rolltable.results[index].collection === "Item") {
                     newItem = game.items.get(rolltable.results[index].resultId);
-                }
-                else {
+                } else {
                     //Try to find it in the compendium
                     const items = game.packs.get(rolltable.results[index].data.collection);
-                    newItem = await items.getEntity(rollResult.results[0].data.resultId);
+                    newItem = await items.getDocument(rollResult.results[0].data.resultId);
                 }
+
+								newItem = this.rollSubTables(newItem,index);
+
                 if (!newItem || newItem === null) {
                     return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
                 }
@@ -246,6 +250,25 @@ export class LootPopulator {
 			} catch (error) {
 				return 1;
 			}
+		}
+
+		asycn _rollSubTables(item, index = 0){
+			if (item instanceof RollTable){
+				let subTableResults  = await item.roll();
+
+				if(subTableResults.results[index].data.collection === "Item"){
+					item = game.items.get(subTableResults.results[index].data.resultId);
+				} else {
+					let itemCollection = game.packs.get(subTableResults.results[index].data.collection);
+					item = await itemCollection.getDocument(subTableResults.results[index].data.resultId);
+				}
+
+				if (item instanceof RollTable){
+					item = await _getItemFromRoll(item,index);
+				}
+			}
+
+			return item;
 		}
 
 		_getSetting(setting){

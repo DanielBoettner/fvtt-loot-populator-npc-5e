@@ -16,17 +16,19 @@ Also recommended is the use of [better rolltables](https://github.com/ultrakorne
 
 ### Example of filled inventory
 On the left is the sheet of a token that was droped on the scene.
-The right sheet is directly from the actor.
+The right hand sheet is directly from the actor.
 
 ![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/SheetExample.png)
 
 ### Features
 
 Allows you to have automated random loot on NPCs when dropping them on the scene.
-If installed, it will make use of better rolltables.
+If installed and activated, it can make use of better rolltables.
 
 ### Compatibility:
-- Tested with FVTT v0.7.9 and the DND5E system only.
+- FoundryVTT v0.7.10
+- FoundryVTT v0.8.6+
+- Tested with DnD5e system only.
 
 ### Installation Instructions
 
