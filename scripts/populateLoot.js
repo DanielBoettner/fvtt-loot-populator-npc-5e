@@ -17,59 +17,59 @@ export class LootPopulator {
 		const itemOnlyOnce = actor.getFlag(ls5e_moduleNamespace, "itemOnlyOnce") || false;
 		const reducedVerbosity = this._getSetting("reduceUpdateVerbosity") || true;
 		let shopQtyRoll = new Roll(shopQtyFormula);
-		
+
 		shopQtyRoll.roll();
-		
+
 		if (!rolltableName) {
 			return;
 		}
-		
+
 		let rolltable = game.tables.getName(rolltableName);
-		
+
 		if (!rolltable) {
 			return ui.notifications.error(this.moduleNamespace + `: No Rollable Table found with name "${rolltableName}".`);
 		}
-		
+
 		if (itemOnlyOnce) {
 			if (rolltable.results.length < shopQtyRoll.total)  {
 				return ui.notifications.error(this.moduleNamespace + `: Cannot create a loot with ${shopQtyRoll.total} unqiue entries if the rolltable only contains ${rolltable.results.length} items`);
 			}
 		}
-		
+
 		if (!itemOnlyOnce) {
 			for (let i = 0; i < shopQtyRoll.total; i++) {
 				const rollResult = await rolltable.roll();
 				let newItem = null;
-				
+
 				if (rollResult.results[0].collection === "Item") {
 					newItem = game.items.get(rollResult.results[0].data.resultId);
 				} else {
 					const items = game.packs.get(rollResult.results[0].data.collection);
 					newItem = await items.getDocument(rollResult.results[0].data.resultId);
 				}
-				
-				newItem = this._rollSubTables(newItem);
-				
+
+				newItem = await this._rollSubTables(newItem);
+
 				if (!newItem || newItem === null) {
 					return;
 				}
-				
+
 				if (newItem.type === "spell") {
 					newItem = await Item5e.createScrollFromSpell(newItem)
 				}
-				
+
 				let itemQtyRoll = new Roll(itemQtyFormula);
 				itemQtyRoll.roll();
-				
+
 				console.log(this.moduleNamespace + `: Adding ${itemQtyRoll.total} x ${newItem.name}`)
-				
+
 				let existingItem = actor.items.find(item => item.data.name == newItem.name);
-				
+
 				if (existingItem === undefined) {
 					await actor.createEmbeddedDocuments("Item", [newItem.toObject()]);
 					console.log(this.moduleNamespace + `: ${newItem.name} does not exist.`);
 					existingItem = await actor.items.find(item => item.data.name == newItem.name);
-					
+
 					if (itemQtyLimit > 0 && Number(itemQtyLimit) < Number(itemQtyRoll.total)) {
 						await existingItem.update({ "data.quantity": itemQtyLimit });
 						if (!reducedVerbosity) ui.notifications.info(this.moduleNamespace + `: Added new ${itemQtyLimit} x ${newItem.name}.`);
@@ -79,16 +79,16 @@ export class LootPopulator {
 					}
 				} else {
 					console.log(this.moduleNamespace + `:  Item ${newItem.name} exists.`);
-					
+
 					let newQty = Number(existingItem.data.data.quantity) + Number(itemQtyRoll.total);
-					
+
 					if (itemQtyLimit > 0 && Number(itemQtyLimit) === Number(existingItem.data.data.quantity)) {
 						if (!reducedVerbosity) ui.notifications.info(this.moduleNamespace + `: ${newItem.name} already at maximum quantity (${itemQtyLimit}).`);
 					}
 					else if (itemQtyLimit > 0 && Number(itemQtyLimit) < Number(newQty)) {
 						//console.log("Exceeds existing quantity, limiting");
 						await existingItem.update({ "data.quantity": itemQtyLimit });
-						
+
 						if (!reducedVerbosity) ui.notifications.info(this.moduleNamespace + `: Added additional quantity to ${newItem.name} to the specified maximum of ${itemQtyLimit}.`);
 					} else {
 						await existingItem.update({ "data.quantity": newQty });
@@ -98,9 +98,9 @@ export class LootPopulator {
 			}
 		} else {
 			// Get a list which contains indexes of all possible results
-			
+
 			const rolltableIndexes = []
-			
+
 			// Add one entry for each weight an item has
 			for (let index in [...Array(rolltable.results.length).keys()]) {
 				let numberOfEntries = rolltable.data.results[index].weight
@@ -108,25 +108,25 @@ export class LootPopulator {
 					rolltableIndexes.push(index);
 				}
 			}
-			
+
 			// Shuffle the list of indexes
 			var currentIndex = rolltableIndexes.length, temporaryValue, randomIndex;
-			
+
 			// While there remain elements to shuffle...
 			while (0 !== currentIndex) {
-				
+
 				// Pick a remaining element...
 				randomIndex = Math.floor(Math.random() * currentIndex);
 				currentIndex -= 1;
-				
+
 				// And swap it with the current element.
 				temporaryValue = rolltableIndexes[currentIndex];
 				rolltableIndexes[currentIndex] = rolltableIndexes[randomIndex];
 				rolltableIndexes[randomIndex] = temporaryValue;
 			}
-			
+
 			// console.log(`Rollables: ${rolltableIndexes}`)
-			
+
 			let indexesToUse = [];
 			let numberOfAdditionalItems = 0;
 			// Get the first N entries from our shuffled list. Those are the indexes of the items in the roll table we want to add
@@ -136,25 +136,25 @@ export class LootPopulator {
 				let usedEntries = rolltableIndexes.slice(0, shopQtyRoll.total + numberOfAdditionalItems);
 				// console.log(`Distinct: ${usedEntries}`);
 				let distinctEntris = [...new Set(usedEntries)];
-				
+
 				if (distinctEntris.length < shopQtyRoll.total) {
 					numberOfAdditionalItems++;
 					// console.log(`numberOfAdditionalItems: ${numberOfAdditionalItems}`);
 					continue;
 				}
-				
+
 				indexesToUse = distinctEntris
 				// console.log(`indexesToUse: ${indexesToUse}`)
 				break;
 			}
-			
+
 			for (const index of indexesToUse)
 			{
 				let itemQtyRoll = new Roll(itemQtyFormula);
 				itemQtyRoll.roll();
-				
+
 				let newItem = null
-				
+
 				if (rolltable.results[index].collection === "Item") {
 					newItem = game.items.get(rolltable.results[index].resultId);
 				} else {
@@ -162,20 +162,20 @@ export class LootPopulator {
 					const items = game.packs.get(rolltable.results[index].data.collection);
 					newItem = await items.getDocument(rollResult.results[0].data.resultId);
 				}
-				
-				newItem = this._rollSubTables(newItem,index);
-				
+
+				newItem = await this._rollSubTables(newItem,index);
+
 				if (!newItem || newItem === null) {
 					return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
 				}
-				
+
 				if (newItem.type === "spell") {
 					newItem = await Item5e.createScrollFromSpell(newItem)
 				}
-				
+
 				await item.createEmbeddedDocuments("Item", [newItem.toObject()]);
 				let existingItem = actor.items.find(item => item.data.name == newItem.name);
-				
+
 				if (itemQtyLimit > 0 && Number(itemQtyLimit) < Number(itemQtyRoll.total)) {
 					await existingItem.update({ "data.quantity": itemQtyLimit });
 					if (!reducedVerbosity) ui.notifications.info(this.moduleNamespace + `: Added new ${itemQtyLimit} x ${newItem.name}.`);
@@ -185,23 +185,23 @@ export class LootPopulator {
 				}
 			}
 		}
-		
+
 		if (this._getSetting('generateCurrency') &&  this._getSetting('lootCurrencyDefault')){
 			let lootCurrencyString = this._getSetting('lootCurrencyDefault');
-			
+
 			if (this._getSetting('useBetterRolltables')){
 				lootCurrencyString = rolltable.getFlag('better-rolltables','table-currency-string') || lootCurrencyString;
 			}
-			
+
 			await this.addCurrenciesToActor(actor, this._generateCurrency(lootCurrencyString));
 		}
 	}
-	
+
 	async addCurrenciesToActor(actor, lootCurrency) {
 		let currencyData = duplicate(actor.data.data.currency),
 		cr = actor.data.data.details.cr || 0,
 		amount = 0;
-		
+
 		for (var key in lootCurrency) {
 			if (currencyData.hasOwnProperty(key)) {
 				if(this._getSetting('adjustCurrencyWithCR')){
@@ -209,41 +209,41 @@ export class LootPopulator {
 				} else {
 					amount = Number(currencyData[key].value || 0) + Number(lootCurrency[key]);
 				}
-				
+
 				currencyData[key] = {"value": amount.toString()};
 			}
 		}
-		
+
 		await actor.update({"data.currency": currencyData});
-		
+
 	}
-	
+
 	_generateCurrency(currencyString) {
 		const currenciesToAdd = {};
-		
+
 		if (currencyString) {
 			const currenciesPieces = currencyString.split(",");
-			
+
 			for (const currency of currenciesPieces) {
 				const match = /(.*)\[(.*?)\]/g.exec(currency); //capturing 2 groups, the formula and then the currency symbol in brakets []
-				
+
 				if (!match || match.length < 3) {
 					ui.notifications.warn(this.moduleNamespace + `: Currency loot field contain wrong formatting, currencies need to be define as "diceFormula[currencyType]" => "1d100[gp]" but was ${currency}`);
 					continue;
 				}
-				
+
 				const rollFormula = match[1];
 				const currencyString = match[2];
 				const amount = this._tryRoll(rollFormula);
-				
+
 				if (!this._getSetting("reduceUpdateVerbosity")) ui.notifications.info(this.moduleNamespace + `:	Adding `+amount+currencyString+` to the actor.`);
 				currenciesToAdd[currencyString] = (currenciesToAdd[currencyString] || 0) + amount;
 			}
 		}
-		
+
 		return currenciesToAdd;
 	}
-	
+
 	_tryRoll(rollFormula){
 		try {
 			return new Roll(rollFormula).roll().total || 1;
@@ -251,26 +251,26 @@ export class LootPopulator {
 			return 1;
 		}
 	}
-	
+
 	async _rollSubTables(item, index = 0){
 		if (item instanceof RollTable){
 			let subTableResults  = await item.roll();
-			
+
 			if(subTableResults.results[index].data.collection === "Item"){
 				item = game.items.get(subTableResults.results[index].data.resultId);
 			} else {
 				let itemCollection = game.packs.get(subTableResults.results[index].data.collection);
 				item = await itemCollection.getDocument(subTableResults.results[index].data.resultId);
 			}
-			
+
 			if (item instanceof RollTable){
 				item = await this._rollSubTables(item,index);
 			}
 		}
 		return item;
-		
+
 	}
-	
+
 	_getSetting(setting){
 		return game.settings.get(this.moduleNamespace,setting);
 	}
