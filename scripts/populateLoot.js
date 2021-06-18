@@ -9,7 +9,11 @@ export class LootPopulator {
 		//instead of the main actor we want/need the actor of the token.
 		const tokenId = token.id;
 		const actor = token.actor;
+		const creatureType = actor.data.data.details.type.value;
 		const ls5e_moduleNamespace = "lootsheetnpc5e";
+
+		if (this._getSetting("useBlacklist") && this._getSetting("blacklist_"+creatureType)) return;
+
 		const rolltableName = actor.getFlag(ls5e_moduleNamespace, "rolltable") || this._getSetting("fallbackRolltable");
 		const shopQtyFormula = actor.getFlag(ls5e_moduleNamespace, "shopQty") || this._getSetting("fallbackShopQty") || "1";
 		const itemQtyFormula = actor.getFlag(ls5e_moduleNamespace, "itemQty") || this._getSetting("fallbackItemQty") || "1";
