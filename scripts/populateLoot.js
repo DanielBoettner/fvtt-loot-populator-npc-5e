@@ -54,7 +54,7 @@ export class LootPopulator {
                     newItem = await items.getDocument(rollResult.results[0].data.resultId);
                 }
 
-								newItem = this.rollSubTables(newItem);
+								newItem = this._rollSubTables(newItem);
 
                 if (!newItem || newItem === null) {
                     return;
@@ -169,7 +169,7 @@ export class LootPopulator {
                     newItem = await items.getDocument(rollResult.results[0].data.resultId);
                 }
 
-								newItem = this.rollSubTables(newItem,index);
+								newItem = this._rollSubTables(newItem,index);
 
                 if (!newItem || newItem === null) {
                     return ui.notifications.error(this.moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
