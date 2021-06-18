@@ -264,7 +264,7 @@ export class LootPopulator {
 				}
 
 				if (item instanceof RollTable){
-					item = await _getItemFromRoll(item,index);
+					item = await _rollSubTables(item,index);
 				}
 			}
 
