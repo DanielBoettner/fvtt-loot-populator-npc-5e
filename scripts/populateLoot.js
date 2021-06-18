@@ -252,7 +252,7 @@ export class LootPopulator {
 			}
 		}
 
-		asycn _rollSubTables(item, index = 0){
+		async _rollSubTables(item, index = 0){
 			if (item instanceof RollTable){
 				let subTableResults  = await item.roll();
 
