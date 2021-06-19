@@ -1,9 +1,3 @@
-export {LootPopulatorSettingsConfig}
-
-export const MODULE = 'lootpopulatornpc5e';
-export const PATH = `modules/${MODULE}`
-
-
 /**
  * A game settings configuration application
  * This form renders the settings defined via the game.settings.register API which have config = true
@@ -144,3 +138,7 @@ class LootPopulatorSettingsConfig extends FormApplication {
     }
   }
 }
+
+export {LootPopulatorSettingsConfig};
+export const MODULE = 'lootpopulatornpc5e';
+export const PATH = `modules/${MODULE}`;
