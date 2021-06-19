@@ -11,7 +11,7 @@ export let initHooks = () => {
       if (!token.actor || (token.data.actorLink)) // Don't for linked token
         return token;
 
-      let lootPopulator = new LootPopulator();
-      lootPopulator.generateLoot(token);
+      let lootPopulator = new LootPopulator(token);
+      lootPopulator.populateToken(token);
     });
-}
+};
