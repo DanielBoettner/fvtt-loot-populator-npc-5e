@@ -1,5 +1,5 @@
 import Item5e from "../../../systems/dnd5e/module/item/entity.js";
-import { Currency } from "./modules/currency.mjs";
+import Currency from "./modules/currency.mjs";
 
 const moduleNamespace = "lootpopulatornpc5e";
 
@@ -196,7 +196,7 @@ export class LootPopulator {
 			}
 		}
 
-		await this._handleCurrency(actor);
+		await this._handleCurrency(rolltable);
 	}
 
 	async _rollSubTables(item, index = 0) {
@@ -218,7 +218,7 @@ export class LootPopulator {
 
 	}
 
-	async _handleCurrency() {
+	async _handleCurrency(rolltable) {
 		if (this._getSetting('generateCurrency') && this._getSetting('lootCurrencyDefault')) {
 
 			let lootCurrencyString = this._getSetting('lootCurrencyDefault');
@@ -226,10 +226,10 @@ export class LootPopulator {
 			if (this._getSetting('useBetterRolltables')) {
 				lootCurrencyString = rolltable.getFlag('better-rolltables', 'table-currency-string') || lootCurrencyString;
 			}
-			let currencyHandler = new Currency();
-			await currencyHandler.addCurrenciesToActor(
+			
+			await Currency.addCurrenciesToActor(
 				this.actor,
-				currencyHandler._generateCurrency(lootCurrencyString),
+				Currency._generateCurrency(lootCurrencyString),
 				this._getSetting("adjustCurrencyWithCR")
 			);
 		}

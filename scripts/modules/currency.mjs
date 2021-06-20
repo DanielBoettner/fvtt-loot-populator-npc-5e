@@ -1,4 +1,4 @@
-export class Currency {
+class Currency {
 
     /**
      *  @param {String} currencyString 
@@ -68,3 +68,4 @@ export class Currency {
 		}
 	}
 }
+export default Currency;
