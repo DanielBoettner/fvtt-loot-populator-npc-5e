@@ -7,12 +7,12 @@
 class LootPopulatorSettingsConfig extends FormApplication {
   constructor() {
     super();
-		this.moduleNamespace = MODULE;
-		return this;
-	}
+    this.moduleNamespace = MODULE;
+    return this;
+  }
 
   /** @override */
-	static get defaultOptions() {
+  static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       title: game.i18n.localize("LootPopulator Advanced Settings"),
       id: "loopopulator-settings",
@@ -20,9 +20,9 @@ class LootPopulatorSettingsConfig extends FormApplication {
       width: 600,
       height: "auto",
       tabs: [
-        {navSelector: ".tabs", contentSelector: ".content", initial: "general"}
+        { navSelector: ".tabs", contentSelector: ".content", initial: "general" }
       ]
-    })
+    });
   }
 
   /* -------------------------------------------- */
@@ -33,18 +33,19 @@ class LootPopulatorSettingsConfig extends FormApplication {
     //    const canConfigure =  game.user.can("SETTINGS_MODIFY");
 
     const data = {
-      tabs:[
-        {name: "defaults", i18nName:"Module defaults", class: "fas fa-cog", menus: [], settings: []},
-        {name: "blacklist", i18nName:"Blacklists", class: "fas fa-address-book", menus: [], settings: []}
+      tabs: [
+        { name: "defaults", i18nName: "Module defaults", class: "fas fa-cog", menus: [], settings: [] },
+        { name: "creature_defaults", i18nName: "Creature Defaults", class: "fas fa-address-book", menus: [], settings: [] },
+        { name: "skiplist", i18nName: "Skiplist", class: "fas fa-address-book", menus: [], settings: [] }
       ]
     };
 
     // Classify all settings
-    for ( let setting of gs.settings.values() ) {
+    for (let setting of gs.settings.values()) {
 
       // Only concerned about dnd5e-helpers settings
-      if(setting.module !== MODULE) continue;
-      
+      if (setting.module !== MODULE) continue;
+
       // Exclude settings the user cannot change
       if (!game.user.isGM) continue;
 
@@ -60,10 +61,10 @@ class LootPopulatorSettingsConfig extends FormApplication {
 
       // Classify setting
       const name = s.module;
-      if(name === MODULE) {
+      if (name === MODULE) {
         const group = s.group;
-        let groupTab = data.tabs.find( tab => tab.name === group ) ?? false;
-        if(groupTab) {
+        let groupTab = data.tabs.find(tab => tab.name === group) ?? false;
+        if (groupTab) {
           groupTab.settings.push(s);
         }
       }
@@ -100,7 +101,7 @@ class LootPopulatorSettingsConfig extends FormApplication {
   _onClickSubmenu(event) {
     event.preventDefault();
     const menu = game.settings.menus.get(event.currentTarget.dataset.key);
-    if ( !menu ) return ui.notifications.error("No submenu found for the provided key");
+    if (!menu) return ui.notifications.error("No submenu found for the provided key");
     const app = new menu.type();
     return app.render(true);
   }
@@ -116,8 +117,8 @@ class LootPopulatorSettingsConfig extends FormApplication {
     event.preventDefault();
     const button = event.currentTarget;
     const form = button.form;
-    for ( let [k, v] of game.settings.settings.entries() ) {
-      if ( v.config ) {
+    for (let [k, v] of game.settings.settings.entries()) {
+      if (v.config) {
         let input = form[k];
         if (input.type === "checkbox") input.checked = v.default;
         else if (input) input.value = v.default;
@@ -129,16 +130,16 @@ class LootPopulatorSettingsConfig extends FormApplication {
 
   /** @override */
   async _updateObject(event, formData) {
-    for ( let [k, v] of Object.entries(flattenObject(formData)) ) {
+    for (let [k, v] of Object.entries(flattenObject(formData))) {
       let s = game.settings.settings.get(k);
       let current = game.settings.get(s.module, s.key);
-      if ( v !== current ) {
+      if (v !== current) {
         await game.settings.set(s.module, s.key, v);
       }
     }
   }
 }
 
-export {LootPopulatorSettingsConfig};
+export { LootPopulatorSettingsConfig };
 export const MODULE = 'lootpopulatornpc5e';
 export const PATH = `modules/${MODULE}`;
