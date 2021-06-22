@@ -7,7 +7,8 @@ const GROUP_CREATURE = 'creature_defaults';
 
 export class Settings {
     constructor() {
-        this.availableRolltables = Object.assign(...game.tables.entities.map(table => ({ [table.name]: table.name })));
+        
+        this.availableRolltables = this._getGameWorldRolltables();
         this.hasBetterRolltables = (typeof game.betterTables !== "undefined");
         this.dndCreatureTypes = Object.keys(CONFIG.DND5E.creatureTypes);
 
@@ -188,5 +189,24 @@ export class Settings {
                 type: Boolean
             });
         });
+    }
+
+    _getGameWorldRolltables() {
+
+        let gameWorldRolltableCompendiums = game.packs.filter((pack) => pack.metadata.entity === "RollTable");        
+        let gameWorldTables = game.tables.entities.map(table => ({ [table.name]: table.name }));
+
+        for (let rolltableCompendium of gameWorldRolltableCompendiums) {
+            let currentTables = rolltableCompendium.index.map(table => ({
+                 ['_comp_'+ rolltableCompendium.metadata.package + '.' + rolltableCompendium.metadata.name + '_' + table._id]: table.name 
+                }));
+            gameWorldTables.push(...currentTables);
+        }
+        
+        if(gameWorldTables && gameWorldTables.length){
+            return Object.assign(...gameWorldTables);
+        }
+
+        return [];
     }
 }
