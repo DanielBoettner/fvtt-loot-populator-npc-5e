@@ -1,11 +1,8 @@
-[![Github All Releases](https://img.shields.io/github/downloads/DanielBoettner/fvtt-loot-populator-npc-5e/total.svg)]()
+# Loot Populater NPC 5E
 
-# Loot Populator NPC 5E
+This module allows you to enable automatic population of loot on placed tokens in D&D5e.
 
-This module allows you to enable automatic population of loot on NPCs in 5e.
-
-The module is heavily inspired by [LootSheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e) and also is only really useful when using this in tandem.
-As LootSheetNPC5e adds the capability and permission handling for players to actually loot items from token/actors.
+The module was inspired by [LootSheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e) and also is only really useful when using this in tandem. LootSheetNPC5e adds the capability and permission handling for players to actually loot items from tokens/actors.
 
 Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
 
@@ -24,6 +21,12 @@ The right hand sheet is directly from the actor.
 
 Allows you to have automated random loot on NPCs when dropping them on the scene.
 If installed and activated, it can make use of better rolltables.
+
+When the modules functionality is activated it picks the according rolltable with the following priority:
+
+1. If an actor has a rolltable assigned (via lootsheetNPC5e) this table will be used.
+2. If a creature type specific table should be used and is set - this table will be used
+3. If a general default fallback table is set - this table will be used
 
 ### Compatibility:
 - FoundryVTT v0.7.10
