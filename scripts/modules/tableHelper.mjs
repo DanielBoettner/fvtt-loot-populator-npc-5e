@@ -5,7 +5,7 @@ class tableHelper {
 			return await game.packs.get(comp_table[2]).getDocument(comp_table[3]);
 		} 
 		
-		return game.tables.getName(this.rolltableName);
+		return game.tables.getName(name);
 	}
 
     static async _rollSubTables(item, index = 0) {
