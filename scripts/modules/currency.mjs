@@ -1,6 +1,34 @@
 class Currency {
 
     /**
+     * 
+     * @param actor 
+     * @param rolltable 
+     * @param flags
+     * @param generateCurrency 
+     * @param lootCurrencyDefault 
+     * @param useBTR 
+     */
+    static async _handleCurrency(
+        actor,
+        flags
+        ) {
+		if (flags.generateCurrency && flags.lootCurrencyDefault) {
+			let lootCurrencyString = flags.lootCurrencyDefault;
+
+			if (flags.useBetterRolltables) {
+				lootCurrencyString = flags.brt_rt_tcs || lootCurrencyString;
+			}
+			
+			await Currency.addCurrenciesToActor(
+				actor,
+				Currency._generateCurrency(lootCurrencyString),
+				flags.adjustCurrency
+			);
+		}
+	}
+
+    /**
      *  @param {String} currencyString 
      *  @returns 
      */
@@ -52,7 +80,6 @@ class Currency {
 		}
 
 		await actor.update({"data.currency": currencyData});
-
 	}
     
     /**
