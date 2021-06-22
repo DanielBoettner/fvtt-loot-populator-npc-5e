@@ -2,9 +2,27 @@
 
 This module allows you to enable automatic population of loot on placed tokens in D&D5e.
 
-The module was inspired by [LootSheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e) and also is only really useful when using this in tandem. LootSheetNPC5e adds the capability and permission handling for players to actually loot items from tokens/actors.
+The module was inspired by [LootSheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e) and also is only really useful when using this in tandem.
+LootSheetNPC5e adds the capability and permission handling for players to actually loot items from tokens/actors.
 
 Also recommended is the use of [better rolltables](https://github.com/ultrakorne/better-rolltables), it will greatly improve you experience when working with rolltables.
+
+### Features
+
+Allows you to have automated random loot on NPCs when dropping them on the scene.
+If installed and activated, it can make use of better rolltables.
+
+Tables can be chosen from **World** and **Compendium**.
+
+**Table priority when populating a token**
+
+1. A actor has a rolltable assigned (via lootsheetNPC5e) this table will be used.
+2. A ceature type specific table is found (but no actor specific table) - this table will be used
+3. If a general default fallback table is set (nothing else)- this table will be used
+
+**Tokens will not be populated when**
+
+* Skiplist active and creature type checked in skiplist
 
 ### Settings
 ![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/LP_001.png)
@@ -16,17 +34,6 @@ On the left is the sheet of a token that was droped on the scene.
 The right hand sheet is directly from the actor.
 
 ![image](https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/blob/master/SheetExample.png)
-
-### Features
-
-Allows you to have automated random loot on NPCs when dropping them on the scene.
-If installed and activated, it can make use of better rolltables.
-
-When the modules functionality is activated it picks the according rolltable with the following priority:
-
-1. If an actor has a rolltable assigned (via lootsheetNPC5e) this table will be used.
-2. If a creature type specific table should be used and is set - this table will be used
-3. If a general default fallback table is set - this table will be used
 
 ### Compatibility:
 - FoundryVTT v0.7.10
