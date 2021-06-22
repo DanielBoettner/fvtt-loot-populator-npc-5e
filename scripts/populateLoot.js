@@ -1,5 +1,6 @@
 import Item5e from "../../../systems/dnd5e/module/item/entity.js";
 import Currency from "./modules/currency.mjs";
+import tableHelper from "./modules/tableHelper.mjs";
 
 const moduleNamespace = "lootpopulatornpc5e";
 
@@ -18,7 +19,7 @@ export class LootPopulator {
 		this.itemOnlyOnce = this.actor.getFlag(ls5e_moduleNamespace, "itemOnlyOnce") || false;
 		this.reducedVerbosity = this._getSetting("reduceUpdateVerbosity") || true;
 
-		if (this._getSetting("creatureTypeFallbacks") && (this._getSetting("creaturetype_default_" + creatureType + '_table'))) {
+		if (this._getSetting("creatureTypeFallbacks") && (this._getSetting("creaturetype_default_" + creatureType + '_table') != 0)) {
 			this.rolltableName = this.actor.getFlag(ls5e_moduleNamespace, "rolltable") || this._getSetting("creaturetype_default_" + creatureType + '_table');
 		} else {
 			this.rolltableName = this.actor.getFlag(ls5e_moduleNamespace, "rolltable") || this._getSetting("fallbackRolltable");
@@ -37,9 +38,10 @@ export class LootPopulator {
 		if (!this.rolltableName) return;
 
 		let shopQtyRoll = new Roll(this.shopQtyFormula);
+		
 		shopQtyRoll.roll();
 
-		let rolltable = game.tables.getName(this.rolltableName);
+		let rolltable = await tableHelper._getRolltable(this.rolltableName);
 
 		if (!rolltable) {
 			return ui.notifications.error(moduleNamespace + `: No Rollable Table found with name "${this.rolltableName}".`);
@@ -63,7 +65,7 @@ export class LootPopulator {
 					newItem = await items.getDocument(rollResult.results[0].data.resultId);
 				}
 
-				newItem = await this._rollSubTables(newItem);
+				newItem = await tableHelper._rollSubTables(newItem);
 
 				if (!newItem || newItem === null) {
 					return;
@@ -173,7 +175,7 @@ export class LootPopulator {
 					newItem = await items.getDocument(rollResult.results[0].data.resultId);
 				}
 
-				newItem = await this._rollSubTables(newItem, index);
+				newItem = await tableHelper._rollSubTables(newItem, index);
 
 				if (!newItem || newItem === null) {
 					return ui.notifications.error(moduleNamespace + `: No item found "${rolltable.results[index].resultId}".`);
@@ -196,43 +198,15 @@ export class LootPopulator {
 			}
 		}
 
-		await this._handleCurrency(rolltable);
-	}
+		let currencyFlags = {
+			"generateCurrency": this._getSetting('generateCurrency'),
+			"lootCurrencyDefault": this._getSetting('lootCurrencyDefault'),
+			"useBetterRolltables": this._getSetting("useBetterRolltables"),
+			"brt_rt_tcs": rolltable.getFlag('better-rolltables', 'table-currency-string'),
+			"adjustCurrency": this._getSetting("adjustCurrencyWithCR")
+		};
 
-	async _rollSubTables(item, index = 0) {
-		if (item instanceof RollTable) {
-			let subTableResults = await item.roll();
-
-			if (subTableResults.results[index].data.collection === "Item") {
-				item = game.items.get(subTableResults.results[index].data.resultId);
-			} else {
-				let itemCollection = game.packs.get(subTableResults.results[index].data.collection);
-				item = await itemCollection.getDocument(subTableResults.results[index].data.resultId);
-			}
-
-			if (item instanceof RollTable) {
-				item = await this._rollSubTables(item, index);
-			}
-		}
-		return item;
-
-	}
-
-	async _handleCurrency(rolltable) {
-		if (this._getSetting('generateCurrency') && this._getSetting('lootCurrencyDefault')) {
-
-			let lootCurrencyString = this._getSetting('lootCurrencyDefault');
-
-			if (this._getSetting('useBetterRolltables')) {
-				lootCurrencyString = rolltable.getFlag('better-rolltables', 'table-currency-string') || lootCurrencyString;
-			}
-			
-			await Currency.addCurrenciesToActor(
-				this.actor,
-				Currency._generateCurrency(lootCurrencyString),
-				this._getSetting("adjustCurrencyWithCR")
-			);
-		}
+		await Currency._handleCurrency(this.actor,currencyFlags);
 	}
 
 	_getSetting(setting) {
