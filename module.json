@@ -2,9 +2,9 @@
 	"name": "lootpopulatornpc5e",
 	"title": "Loot populater NPC | 5e",
 	"description": "A module to automatically populate loot on monsters and npcs when placed on the map.",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"minimumCoreVersion": "0.8.5",
-	"compatibleCoreVersion": "0.8.7",
+	"compatibleCoreVersion": "0.8.8",
 	"author": "Daniel Böttner",
 	"systems": ["dnd5e"],
 	"includes": [
