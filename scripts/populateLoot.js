@@ -13,17 +13,17 @@ export class LootPopulator {
 		this.token = token;
 		this.actor = this.token.actor;
 
-		this.shopQtyFormula = this.actor.getFlag(ls5e_moduleNamespace, "shopQty") || this._getSetting("fallbackShopQty") || "1";
-		this.itemQtyFormula = this.actor.getFlag(ls5e_moduleNamespace, "itemQty") || this._getSetting("fallbackItemQty") || "1";
-		this.itemQtyLimit = this.actor.getFlag(ls5e_moduleNamespace, "itemQtyLimit") || this._getSetting("fallbackItemQtyLimit") || "0";
-		this.itemOnlyOnce = this.actor.getFlag(ls5e_moduleNamespace, "itemOnlyOnce") || false;
-		this.reducedVerbosity = this._getSetting("reduceUpdateVerbosity") || true;
-
 		if (this._getSetting("creatureTypeFallbacks") && (this._getSetting("creaturetype_default_" + creatureType + '_table') != 0)) {
 			this.rolltableName = this.actor.getFlag(ls5e_moduleNamespace, "rolltable") || this._getSetting("creaturetype_default_" + creatureType + '_table');
 		} else {
 			this.rolltableName = this.actor.getFlag(ls5e_moduleNamespace, "rolltable") || this._getSetting("fallbackRolltable");
 		}
+
+			this.shopQtyFormula = this.actor.getFlag(ls5e_moduleNamespace, "shopQty") || this._getSetting("fallbackShopQty") || "1";
+			this.itemQtyFormula = this.actor.getFlag(ls5e_moduleNamespace, "itemQty") || this._getSetting("fallbackItemQty") || "1";
+			this.itemQtyLimit = this.actor.getFlag(ls5e_moduleNamespace, "itemQtyLimit") || this._getSetting("fallbackItemQtyLimit") || "0";
+			this.itemOnlyOnce = this.actor.getFlag(ls5e_moduleNamespace, "itemOnlyOnce") || false;
+			this.reducedVerbosity = this._getSetting("reduceUpdateVerbosity") || true;
 
 		return this;
 	}
@@ -36,16 +36,20 @@ export class LootPopulator {
 	async populateToken() {
 
 		if (!this.rolltableName) return;
-
-		let shopQtyRoll = new Roll(this.shopQtyFormula);
-		
-		shopQtyRoll.roll();
-
 		let rolltable = await tableHelper._getRolltable(this.rolltableName);
 
 		if (!rolltable) {
 			return ui.notifications.error(moduleNamespace + `: No Rollable Table found with name "${this.rolltableName}".`);
 		}
+
+		if (this._getSetting("useBetterRolltables") && rolltable.getFlag('better-rolltables', 'table-type')) {
+			game.betterTables.addLootToSelectedToken(rolltable, this.token);
+			return;
+		}
+		
+		let shopQtyRoll = new Roll(this.shopQtyFormula);
+		
+		shopQtyRoll.roll();
 
 		if (this.itemOnlyOnce) {
 			if (rolltable.results.length < shopQtyRoll.total) {
