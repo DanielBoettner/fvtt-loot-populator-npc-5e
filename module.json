@@ -2,11 +2,20 @@
 	"name": "lootpopulatornpc5e",
 	"title": "Loot populater NPC | 5e",
 	"description": "A module to automatically populate loot on monsters and npcs when placed on the map.",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"minimumCoreVersion": "0.8.5",
-	"compatibleCoreVersion": "0.8.8",
+	"compatibleCoreVersion": "0.8.9",
 	"author": "Daniel Böttner",
 	"systems": ["dnd5e"],
+	"dependencies": [
+		{
+		"name": "dnd5e",
+		"type": "system"
+	  },
+	  {
+		"name": "lootsheetnpc5e"
+	  }
+	],
 	"includes": [
 		"./hooks/**",
 		"./scripts/**"
@@ -16,6 +25,15 @@
 	],
 	"styles": [],
 	"socket": false,
+	"packs": [
+		{
+		"name": "loot-populator-macros",
+		"label": "Loot Populator Macros",
+		"system": "dnd5e",
+		"path": "./packs/macros.db",
+		"entity": "Macro"
+		}
+	],
 	"url": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e",
 	"manifest": "https://raw.githubusercontent.com/DanielBoettner/fvtt-loot-populator-npc-5e/master/module.json",
 	"download": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/archive/master.zip"
