@@ -1,8 +1,10 @@
 import { LootPopulator } from '../scripts/populateLoot.js';
 
 export let initHooks = () => {
-  Hooks.on('createToken', (token, createData, options, userId) => {
+  
+  game.LootPopulator = new LootPopulator();
 
+  Hooks.on('createToken', (token, createData, options, userId) => {
     // only act on tokens dropped by the GM
     if (!game.user.isGM) return token;
     if (!game.settings.get("lootpopulatornpc5e", "autoPopulateTokens")) return token;
@@ -19,7 +21,6 @@ export let initHooks = () => {
       return token;
     }
 
-    let lootPopulator = new LootPopulator(token);
-    lootPopulator.populateToken();
+    game.LootPopulator.populate(token);
   });
 };
