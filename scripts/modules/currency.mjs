@@ -10,18 +10,25 @@ class Currency {
      * @param useBTR 
      */
     static async _handleCurrency(
-        actor,
+        token,
         flags
         ) {
 		if (flags.generateCurrency && flags.lootCurrencyDefault) {
 			let lootCurrencyString = flags.lootCurrencyDefault;
 
-			if (flags.useBetterRolltables) {
-				lootCurrencyString = flags.brt_rt_tcs || lootCurrencyString;
-			}
+            /**
+            * If we use betterRolltable and the currencyString of BRT is not empty
+            * the currency was already populated.
+            */
+			if (
+                flags.useBetterRolltables &&
+                (flags.brt_rt_tcs || flags.brt_rt_tcs.length > 0 )
+                ){
+				    return;
+			    }
 			
-			await Currency.addCurrenciesToActor(
-				actor,
+			await Currency.addCurrenciesToToken(
+				token,
 				Currency._generateCurrency(lootCurrencyString),
 				flags.adjustCurrency
 			);
@@ -58,28 +65,33 @@ class Currency {
 
     /**
 	 * Expects and actor and an array
-	 * @param {Actor} actor 
+	 * @param {Actor} token 
 	 * @param {Array|string} lootCurrency 
      * @param {boolean} adjutsByCR
 	 */
-	static async addCurrenciesToActor(actor, lootCurrency, adjutsByCR = false) {
-		let currencyData = duplicate(actor.data.data.currency),
-		cr = actor.data.data.details.cr || 0,
-		amount = 0;
+	static async addCurrenciesToToken(token, lootCurrency, adjutsByCR = false) {
+        const currencyDataInitial = {cp: 0, ep: 0, gp: 0, pp: 0,sp: 0};
+        let currencyData = currencyDataInitial,
+            amount = 0;
+    
+        if (token.data.actorData.data?.currency) {
+          currencyData = duplicate(token.data.actorData.data.currency);
+        }
 
-		for (var key in lootCurrency) {
+		for (let key in lootCurrency) {
 			if (currencyData.hasOwnProperty(key)) {
 				if(adjutsByCR){
-					amount = Number(currencyData[key].value || 0) + Math.ceil(cr) + Number(lootCurrency[key]);
+                    let cr = game.actors.find(actor => actor._id === token.data.actorId).data.data.details.cr || 0;
+					amount = Number(currencyData[key] || 0) +  Number(Math.ceil(cr * lootCurrency[key]));
 				} else {
-					amount = Number(currencyData[key].value || 0) + Number(lootCurrency[key]);
+					amount = Number(currencyData[key] || 0) + Number(lootCurrency[key]);
 				}
 
-				currencyData[key] = {"value": amount.toString()};
+				currencyData[key] = amount;
 			}
 		}
 
-		await actor.update({"data.currency": currencyData});
+		await token.update({ 'actorData.data.currency': currencyData });
 	}
     
     /**
