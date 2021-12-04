@@ -1,0 +1,43 @@
+{
+  "name": "fvtt-loot-populator-npc-5e",
+  "version": "1.0.0",
+  "description": "A module for FoundryVTT that helps DMs to setup rules to automatically add items to tokens dropped on the game canvas. ",
+  "main": "lootpopulatornpc5e.js",
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "cpy-cli": "^3.1.1",
+    "generate-docs": "^1.1.1",
+    "jsdoc-to-markdown": "^7.1.0",
+    "less-plugin-clean-css": "^1.5.1",
+    "lessc": "^1.0.2"
+  },
+  "scripts": {
+    "all": "tsc && npm run less npm run localcopy && npm run generate-docs",
+    "build": "tsc && npm run less && cpy templates packs lang icons dist --recursive --parents",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local-all": "npm run build && npm run localcopy && npm run generate-docs",
+    "localcopy": "cd dist && cpy . /mnt/c/Users/jackp/AppData/Local/FoundryVTT/Data/modules/lootpopulatornpc5e --recursive --parents",
+    "less": "lessc -clean-css ./styles/lootpopulatornpc5e.less ./dist/styles/lootpopulatornpc5e.css",
+    "generate-docs": "jsdoc -c jsdoc.json",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e.git"
+  },
+  "keywords": [
+    "foundryvtt",
+    "module",
+    "javascript",
+    "es11",
+    "html",
+    "less",
+    "css"
+  ],
+  "author": "Daniel Böttner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e/issues"
+  },
+  "homepage": "https://github.com/DanielBoettner/fvtt-loot-populator-npc-5e#readme"
+}

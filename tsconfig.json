@@ -1,0 +1,49 @@
+{
+        "compilerOptions": {
+                "target": "es2020",
+                "moduleResolution": "node",
+                "lib": [
+                        "es2020",
+                        "es6",
+                        "es5",
+                        "dom"
+                ],
+                "outDir": "dist",
+                "rootDir": "./",
+                "sourceMap": false,
+                "experimentalDecorators": true,
+                "strict": true,
+                "strictNullChecks": true,
+                "esModuleInterop": false,
+                "types": [
+                        "foundry-pc-types",
+                        "node",
+                ],
+                "typeRoots": [
+                        "C:\\Users\\jackp\\AppData\\Local\\FoundryVTT\\Data\\systems\\dnd5e\\module"
+                ],
+                "allowJs": true,
+                "resolveJsonModule": true,
+        },
+        "typedocOptions": {
+                "entryPoints": [
+                        "./lootpopulatornpc5e.js"
+                ],
+                "out": "docs"
+        },
+        "include": [
+                "lootpopulatornpc5e.js",
+                "module.json",
+                "*/**/*",
+                "./*/*.json",
+                "./templates/*",
+                "./packs/*"
+        ],
+        "exclude": [
+                "node_modules",
+                ".vscode",
+                "dist",
+                "docs",
+                "out"
+        ]
+}
