@@ -1,4 +1,6 @@
-node_modules
+node_modules/
+dist/
+docs/
 images/icon.png
 module-releases_template.txt
 workspace.code-workspace

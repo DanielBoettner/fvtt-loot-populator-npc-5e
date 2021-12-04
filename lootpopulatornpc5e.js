@@ -1,11 +1,3 @@
-import { initHooks } from './hooks/onCreateToken.js';
-import { Settings } from './scripts/modules/settings.mjs';
+import { LootPopulatorHooks } from './modules/hooks/init.js';
 
-Hooks.once('init', () => {
-    initHooks();
-});
-
-Hooks.once('ready', () => {
-    let moduleSettings = new Settings();
-    moduleSettings.registerSettings();
-});
+LootPopulatorHooks.init();
