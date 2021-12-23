@@ -5,5 +5,5 @@
     "LPnpc5e.Settings.Menu.Skiplist": "Kreaturen überspringen",
     "LPnpc5e.Settings.fallbackRolltable": "Fallback Rolltable",
     "LPnpc5e.Settings.shopQuantity.title": "Shop Menge",
-    "LPnpc5e.Settings.shopQuantity.desc": "If no lootsheet shop quantity is assigned to an actor, this will be used as a fallback shop quantity.",
+    "LPnpc5e.Settings.shopQuantity.desc": "If no lootsheet shop quantity is assigned to an actor, this will be used as a fallback shop quantity."
 }

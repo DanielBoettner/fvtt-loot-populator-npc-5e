@@ -2,8 +2,8 @@
 	"name": "lootpopulatornpc5e",
 	"title": "Loot populater NPC | 5e",
 	"description": "A module to automatically populate loot on monsters and npcs when placed on the canvas.",
-	"version": "1.0.1",
-	"minimumCoreVersion": "0.8.5",
+	"version": "0.9.1",
+	"minimumCoreVersion": "0.8.9",
 	"compatibleCoreVersion": "0.8.9",
     "authors":[
 		{

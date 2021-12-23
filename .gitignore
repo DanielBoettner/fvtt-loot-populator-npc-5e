@@ -10,4 +10,3 @@ template/debug.log
 .jshintrc
 .eslintrc
 foundry.js
-package-lock.json
