@@ -1,7 +1,7 @@
 # 🚨 Note for Foundry v9 and later 🚨 # 
 
 The core functionality of this module was included directly into the [LootsheetNPC5e](https://github.com/jopeek/fvtt-loot-sheet-npc-5e)
-with version 4.5.2.3 or later.
+with version 3.4.5.2 or later.
 
 If needed for any non 5e system, feel free to create an issue. I will very likely help get changes from the lootsheet back to this module to get you started.
 
